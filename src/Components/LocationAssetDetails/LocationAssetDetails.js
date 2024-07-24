@@ -61,7 +61,7 @@ function LocationAssetDetails() {
         </div>
           <div className='maindiv'>
           <div className="graph-button" >
-            <button style={{backgroundColor:"white",color:"black",fontWeight:"bold"}}  onClick={goToGraphPage}>Graph Prediction</button>
+            <button style={{backgroundColor:"white",color:"black",fontWeight:"bold",height:"55%",cursor: 'pointer'}}  onClick={goToGraphPage}>Graph Prediction</button>
           </div>
           <div className="filter-container">
             <Select
@@ -86,7 +86,7 @@ function LocationAssetDetails() {
                 </div>
                 <div className="table-body">
                 {filteredData.filter(data => data.Month_Num === month).map((item, idx) => (
-                    <div className="table-row" key={idx} onClick={laptopDetails} style={{ cursor: 'pointer' }}>
+                    <div className="table-row" key={idx}>
                       <span>{item.Item}</span>
                       <span>{item.result_rand}</span>
                     </div>

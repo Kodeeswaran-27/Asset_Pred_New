@@ -20,7 +20,6 @@
 
 .Navbar .logo img{
   height: 100px;
-
 }
 
 .Navbar .logout{
@@ -40,7 +39,7 @@
 
 .logout_image{
   height: 25px;
-  padding-left: 60%;
+  padding-left: 2%;
 }
 
 .Navbar .leftSide {

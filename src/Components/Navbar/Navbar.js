@@ -1,39 +1,92 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
+// import '../../App.css';
+// import live_workspace from '../../Assets/live_workspace.png'
+// import logout from '../../Assets/logout.png'
+// import '../Navbar/Navbar.css';
+// import { useMsal } from "@azure/msal-react";
+// // import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
+// function Navbar({ userName, userRole }) {
+//   const { instance } = useMsal();
+
+//   const handleLogout = () => {
+//     instance.logoutRedirect({
+//       postLogoutRedirectUri: "/",
+//     }).catch(e => {
+//       console.error(e);
+//     });
+//   }
+//   return (
+//     <div className="Navbar">
+//       <div className='logo'>
+//         <img src={live_workspace} alt="Live workspace" />
+//       </div>
+//       <div className='logout'>
+//         <p>Hi,  Adarsh</p>
+//         <img className='logout_image' src={logout} alt="Logout" onClick={handleLogout} style={{ cursor: 'pointer' }} />
+//       </div>
+//     </div>
+//   )
+// }
+// export default Navbar;
+
+import React, { useState, useEffect } from 'react';
 import '../../App.css';
-import Wipro from '../../Assets/Wipro.png';
-import live_workspace from '../../Assets/live_workspace.png'
-import logout from '../../Assets/logout.png'
+import live_workspace from '../../Assets/live_workspace.png';
+import logout from '../../Assets/logout.png';
 import '../Navbar/Navbar.css';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import { SignOutButton } from '../SSO/SignOutButton'
-// import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { useMsal } from "@azure/msal-react";
+import { loginRequest } from '../SSO/authConfig';
+import { callMsGraph } from '../SSO/graph'; // Import your MS Graph call function
 
-function Navbar({ userName, userRole }) {
-    const [showPopup, setShowPopup] = useState(false);
-    const navigate = useNavigate();
+function Navbar() {
+  const { instance, accounts } = useMsal();
+  const [userName, setUserName] = useState('');
+  const [userRole, setUserRole] = useState(''); // Assuming userRole is fetched too
 
-    const handleLogout = () => {
-        navigate('/');
-    };
+  // Function to acquire token and fetch user data
+  function RequestProfileData() {
+    instance
+      .acquireTokenSilent({
+        ...loginRequest,
+        account: accounts[0],
+      })
+      .then((response) => {
+        callMsGraph(response.accessToken).then((data) => {
+          setUserName(data.displayName || 'User'); // Assume displayName is the correct field
+          setUserRole(data.jobTitle || 'Unknown Role'); // Assume jobTitle is the role field
+        });
+      })
+      .catch((error) => {
+        console.error("Error acquiring token silently: ", error);
+      });
+  }
 
-    // const togglePopup = () => {
-    //     setShowPopup(!showPopup);
-    // };
+  // useEffect to call RequestProfileData when component mounts
+  useEffect(() => {
+    RequestProfileData();
+  }, []); // Empty dependency array ensures this runs once on mount
 
-    return (
-        <div className="Navbar">
-            <div className='logo'>
-              <img src={live_workspace} alt="Live workspace" />
-            </div>
-            <div className='logout'>
-              <p>Hi,  Adarsh</p>
-              <Link to="/">
-                {/* <img className='logout_image'src={logout} alt="Logout" /> */}
-                <SignOutButton/>
-              </Link>
-            </div>
-        </div>
-    )
+  // Handle logout
+  const handleLogout = () => {
+    instance.logoutRedirect({
+      postLogoutRedirectUri: "/",
+    }).catch(e => {
+      console.error(e);
+    });
+  }
+
+  return (
+    <div className="Navbar">
+      <div className='logo'>
+        <img src={live_workspace} alt="Live workspace" />
+      </div>
+      <div className='logout'>
+        <p>Hi, {userName}</p> {/* Use state variable for dynamic display */}
+        <img className='logout_image' src={logout} alt="Logout" onClick={handleLogout} style={{ cursor: 'pointer' }} />
+      </div>
+    </div>
+  );
 }
+
 export default Navbar;
