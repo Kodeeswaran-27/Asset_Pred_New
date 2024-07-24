@@ -70,14 +70,14 @@ const FileUpload = () => {
     console.log("Button clicked");
     navigate('/main/predictedData');
     // try {
-    //   const response = await axios.post('http://localhost:5000/upload', jsonData, {
+    //   const response = await axios.post('http://localhost:5000/train', jsonData, {
     //     headers: {
     //       'Content-Type': 'application/json',
     //     },
     //   });
     //   console.log('Data uploaded successfully:', response.data);
-    //   navigate('/main/graph');
-    // } catch (error
+    //   navigate('/main/predictedData');
+    // } catch (error){
     //   console.error('Error uploading data:', error);
     // }
   }
@@ -96,8 +96,8 @@ const FileUpload = () => {
         <div className='upload'>
           <div className={`div1 ${uploadedFiles.length > 0 ? 'small' : 'large'}`}>
             <div className='div2'>
-              <h1>Asset Prediction</h1>
-              <p className='p1'>Please upload the file for analysis</p>
+              <center><p className='p1'>Please upload the file for analysis</p></center>
+              <bold><label className='note'>Note:&nbsp;Please use the below Example excel format while uploading</label></bold>
             </div>
             <div className='drop'
               {...getRootProps()}
@@ -127,7 +127,7 @@ const FileUpload = () => {
               </div>
             )}
             <div>
-              <button className='downloadButton' onClick={goBack}>Upload Files</button>
+              <button className='downloadButton' onClick={goBack}>Predict</button>
               <div className='tableExample drop'>
                 <div className='example'>
                   <Container className='padall'>

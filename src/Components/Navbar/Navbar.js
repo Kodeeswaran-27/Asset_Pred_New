@@ -81,8 +81,11 @@ function Navbar() {
       <div className='logo'>
         <img src={live_workspace} alt="Live workspace" />
       </div>
+      <div className='assetTitle'>
+        <h1>asset prediction</h1>
+      </div>
       <div className='logout'>
-        <p>Hi, {userName}</p> {/* Use state variable for dynamic display */}
+        <p>{userName}</p> {/* Use state variable for dynamic display */}
         <img className='logout_image' src={logout} alt="Logout" onClick={handleLogout} style={{ cursor: 'pointer' }} />
       </div>
     </div>

@@ -118,6 +118,9 @@ color: #546685;
 .p1{
   color: #7e8289;
 }
+.note{
+  color: blue;
+}
 span{
   color: gray;
 }
@@ -166,7 +169,10 @@ padding-top: 2%;
   font-size: 16px;
   word-break: break-word;
 }
-
+.uploaded h3{
+  font-size: large;
+  color: grey !important;
+}
 .year-input {
   width: 50%;
   max-width: 250px;

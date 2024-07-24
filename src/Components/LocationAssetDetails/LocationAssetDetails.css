@@ -22,6 +22,8 @@
   align-items: center;
   font-weight: bold;
   margin-top: 20px;
+  margin-left: -5%;
+
 }
 
 .PredictedData {
@@ -65,6 +67,7 @@
 .maindiv{
   display: flex;
   justify-content: center;
+  margin-left: -5%;
 }
 
 .graph-button {

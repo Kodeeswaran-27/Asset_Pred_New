@@ -61,7 +61,7 @@ function LocationAssetDetails() {
         </div>
           <div className='maindiv'>
           <div className="graph-button" >
-            <button style={{backgroundColor:"white",color:"black",fontWeight:"bold",height:"55%",cursor: 'pointer'}}  onClick={goToGraphPage}>Graph Prediction</button>
+            <button style={{backgroundColor:"white",color:"black",fontWeight:"bold",height:"55%",cursor: 'pointer'}}  onClick={goToGraphPage}>Graphs</button>
           </div>
           <div className="filter-container">
             <Select
