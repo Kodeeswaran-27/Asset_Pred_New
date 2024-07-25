@@ -1,7 +1,7 @@
 # Asset_Prediction
 This repository holds the code for asset prediction project
 #Prerequisites
-install node js command prompt
-Install npm into your system
-run the command - npm install
-now your project is ready to run in your system
+download the zip file
+Extract it
+Open the folder in VS code or locate the folder in Node.js command prompt
+run the command "npm install"
