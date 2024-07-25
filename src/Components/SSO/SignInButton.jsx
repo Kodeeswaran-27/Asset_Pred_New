@@ -14,12 +14,13 @@ export const SignInButton = () => {
       .then(response => {
         instance.setActiveAccount(response.account); // Set active account
         console.log(response);
+        console.log("check ra");
       })
       .catch(error => {
         console.error(error);
       });
   }
   return (
-    <button type="button" className="button" onClick={handleLogin}>Login</button>
+    <button type="button" className="button" onClick={handleLogin}>Sign in with Microsoft</button>
   )
 }

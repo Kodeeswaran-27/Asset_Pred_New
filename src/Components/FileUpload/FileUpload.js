@@ -69,6 +69,15 @@ const FileUpload = () => {
   const goBack = async (jsonData) => {
     console.log("Button clicked");
     navigate('/main/predictedData');
+    //test api start
+    // try{
+    //   const response=await axios.get('https://66a1d926967c89168f1dc513.mockapi.io/todo')
+    //   console.log("Datas",response.data);
+    // }
+    // catch(error){
+    //   console.error(error);
+    // }
+    //test api ends
     // try {
     //   const response = await axios.post('http://localhost:5000/train', jsonData, {
     //     headers: {
