@@ -5,9 +5,9 @@ import LoginForm from './Components/LoginForm/LoginForm';
 import Main from './Components/Main/Main'
 
 function App() {
-  useEffect(() => {  
-    document.title = "New Title";  
-  }, []);
+  // useEffect(() => {  
+  //   document.title = "Asset Prediction";  
+  // }, []);
   return (
     <Router>
       <Routes>

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import monthlyData from './out.json';
 import './LocationAssetDetails.css';
+import Footer from '../Footer/footer'
 
 function LocationAssetDetails() {
   const navigate = useNavigate();
@@ -37,32 +38,32 @@ function LocationAssetDetails() {
     setCurrentPage(0);
   }, [year]);
 
-  // const countryOptions = [
-  //   { value: 'India', label: 'India' },
-  //   { value: 'USA', label: 'USA' },
-  // ];
-
   const yearOptions = [
     { value: '2024', label: '2024' },
-    {value:'2025', label:'2025'}
+    { value: '2025', label: '2025' }
   ];
 
   // Array of month names
   const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"];
+    "July", "August", "September", "October", "November", "December"];
 
   return (
     <div>
-
       <div className='primaryDashboard'>
         <div className="countryDetails">
-          <span className='PredictedData'>Predicted Data</span>
-
-        </div>
-          <div className='maindiv'>
-          <div className="graph-button" >
-            <button style={{backgroundColor:"white",color:"black",fontWeight:"bold",height:"55%",cursor: 'pointer'}}  onClick={goToGraphPage}>Graphs</button>
+          <div className="back-button">
+            <Link to="/main/fileupload" className="goto-back-btn">
+              Back
+            </Link>
           </div>
+          <span className='PredictedData'>Predicted Data</span>
+          <div className="graph-button">
+            <Link to="/main/graph" className="goto-graphs-btn">
+              Graphs
+            </Link>
+          </div>
+        </div>
+        <div className='maindiv'>
           <div className="filter-container">
             <Select
               name="year"
@@ -74,7 +75,7 @@ function LocationAssetDetails() {
               placeholder="Select year"
             />
           </div>
-          </div>
+        </div>
         <div className="dashboard">
           {currentMonths.map((month, index) => (
             <div className="month-box" key={index}>
@@ -85,7 +86,7 @@ function LocationAssetDetails() {
                   <span className='asset-count'>Count</span>
                 </div>
                 <div className="table-body">
-                {filteredData.filter(data => data.Month_Num === month).map((item, idx) => (
+                  {filteredData.filter(data => data.Month_Num === month).map((item, idx) => (
                     <div className="table-row" key={idx}>
                       <span>{item.Item}</span>
                       <span>{item.result_rand}</span>
@@ -99,13 +100,12 @@ function LocationAssetDetails() {
             <button onClick={goToPrevPage} disabled={currentPage === 0}>Previous</button>
             <button onClick={goToNextPage} disabled={currentPage === numPages - 1}>Next</button>
           </div>
-          <div className='footer'>
+          {/* <div className='footer'>
         <p>©2024 - Wipro | Privacy Policy</p>
-      </div>
+      </div> */}
+          <Footer />
         </div>
-
       </div>
-
     </div>
   );
 }

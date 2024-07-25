@@ -11,12 +11,12 @@
   background-size: cover;
 }
 
-
-
 .Maindiv {
   display: flex;
   flex-direction: row;
-  background-image: url('../../Assets/Background2.jpg');
+  /* background-image: url('../../Assets/Background2.jpg'); */
+  background: rgb(2, 0, 36);
+  background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(2, 17, 43, 1) 0%, rgba(4, 31, 75, 1) 57%);
   flex-grow: 1;
 }
 

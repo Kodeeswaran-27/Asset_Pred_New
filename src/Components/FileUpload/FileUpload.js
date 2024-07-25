@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import * as XLSX from 'xlsx';
-import { IoCloudUploadOutline } from "react-icons/io5";
+import { IoCloudUploadOutline, IoArrowBack } from "react-icons/io5";
 import { v4 as uuidv4 } from 'uuid';
 import { FaTrash } from 'react-icons/fa';
 import excel from '../../Assets/excel.png';
@@ -11,6 +11,7 @@ import axios from 'axios';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Footer from '../Footer/footer'
 
 const FileUpload = () => {
   const [loading, setLoading] = useState(false);
@@ -106,7 +107,7 @@ const FileUpload = () => {
           <div className={`div1 ${uploadedFiles.length > 0 ? 'small' : 'large'}`}>
             <div className='div2'>
               <center><p className='p1'>Please upload the file for analysis</p></center>
-              <bold><label className='note'>Note:&nbsp;Please use the below Example excel format while uploading</label></bold>
+              <bold><label className='note'>Note:&nbsp;Kindly use the below Sample Excel format</label></bold>
             </div>
             <div className='drop'
               {...getRootProps()}
@@ -162,8 +163,9 @@ const FileUpload = () => {
           </div>
         </div>
       </div>
-      <div className='footer ft1'>
-        © 2024 Wipro | Privacy Policy
+      <Footer />
+      <div className="bottom-buttons">
+        <Link to="/main/about" className="go-to-about-btn"> <IoArrowBack />About</Link>  {/* Button to go to About Page */}
       </div>
     </div>
   );

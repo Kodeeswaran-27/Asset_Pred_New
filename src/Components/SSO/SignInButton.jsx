@@ -21,6 +21,6 @@ export const SignInButton = () => {
       });
   }
   return (
-    <button type="button" className="button" onClick={handleLogin}>Sign in with Microsoft</button>
+    <button type="button" className="button" onClick={handleLogin}>Sign in with your Organization SSO</button>
   )
 }

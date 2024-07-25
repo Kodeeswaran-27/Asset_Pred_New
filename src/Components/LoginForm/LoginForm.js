@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from '../../Assets/Frame.png';
 import icon from '../../Assets/icon.png';
+import Footer from '../Footer/footer';
 import './LoginForm.css';
 import Fileupload from '../FileUpload/FileUpload';
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from '@azure/msal-react';
@@ -22,7 +23,7 @@ function LoginForm() {
             })
                 .then((response) => {
                     callMsGraph(response.accessToken).then((response) => setGraphData(response));
-                    navigate("/main/home"); // Redirect to the desired route after authentication
+                    navigate("/main/about"); // Redirect to the desired route after authentication
                 })
                 .catch(error => {
                     console.error(error);
@@ -49,9 +50,10 @@ function LoginForm() {
                         </UnauthenticatedTemplate>
                     </div>
                 </div>
-                <div className='footer'>
+                {/* <div className='footer'>
                     <p>©2024 - Wipro | Privacy Policy</p>
-                </div>
+                </div> */}
+                <div className="bv2"><Footer></Footer></div>
             </div>
         </div>
     );

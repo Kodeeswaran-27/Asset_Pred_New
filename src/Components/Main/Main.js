@@ -7,9 +7,9 @@ import LocationAssetDetails from '../LocationAssetDetails/LocationAssetDetails';
 import LaptopDetails from '../LaptopDetails/LaptopDetails';
 import Accounts from '../Accounts/Accounts';
 // import Home from '../Home/Home';
-import Logs from '../Logs/Logs';
 import Graph from '../Graph/Graph';
 import "./Main.css";
+import AboutPage from '../About/AboutPage';
 
 function App() {
     return (
@@ -24,11 +24,10 @@ function App() {
                         <Routes>
                             <Route path="home" element={<FileUpload />} />
                             <Route path="fileupload" element={<FileUpload />} />
-                            
                             <Route path="predictedData/laptopdetails" element={<LaptopDetails />} />
                             <Route path="predictedData" element={<LocationAssetDetails />} />
                             <Route path="accounts" element={<Accounts />} />
-                            <Route path="logs" element={<Logs />} />
+                            <Route path="about" element={<AboutPage />} />
                             <Route path="graph" element={<Graph />} />
                         </Routes>
                     </div>

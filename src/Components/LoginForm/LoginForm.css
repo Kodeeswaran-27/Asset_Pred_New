@@ -38,7 +38,7 @@ height: 25vh;
 h3{
     color: whitesmoke !important;
     font-size:30px;
-    margin-bottom: 20px;
+    margin-bottom: 1px;
 }
 h4{
 color: whitesmoke !important;
@@ -177,37 +177,10 @@ color: whitesmoke !important;
     position: relative;
     z-index: 1;
 }
-
-/* .button{
-    color: whitesmoke;
-    background-color:#03040669;
+.bv2{
     display: flex;
-    align-items: center;
     justify-content: center;
-    margin: 25px auto;
-    width: 95%;
-    height: 40px;
-    cursor: pointer;
-    border-radius: 10px;
-    border: none;
-    font-weight: bold;
-    font-size: 20px;
-    font-family: sans-serif;
-}
-.button:active{
-    background-color: #123361;
-    transform: translateY(4px);
-}
-.button:hover{
-    background-color: #101e3a69;
-} */
-.footer{
-  position: absolute;
+    position: absolute;
     bottom: 0;
     width: 100%;
-}
-
-.footer p{
-  color: white;
-  font-family: sans-serif;
-}
+  }
