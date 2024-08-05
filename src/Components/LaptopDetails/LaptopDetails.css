@@ -19,7 +19,7 @@ body {
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
- 
+
 }
 
 .search-box {
@@ -28,7 +28,7 @@ body {
   border: 1px solid #ddd;
   margin-right: 10px;
   width: 300px;
-  
+
 }
 
 .filter-button {
@@ -37,8 +37,8 @@ body {
   border: 1px solid #ddd;
   background-color: #0073e6;
   color: white;
-  cursor: pointer;  
-  margin-top:-0px;
+  cursor: pointer;
+  margin-top: -0px;
 }
 
 
@@ -60,7 +60,8 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   padding: 15px;
   text-align: left;
   border-bottom: 1px solid #ddd;
@@ -82,7 +83,8 @@ th, td {
   gap: 10px;
 }
 
-.previous, .next {
+.previous,
+.next {
   padding: 10px 20px;
   border-radius: 4px;
   border: 1px solid #ddd;
@@ -91,7 +93,8 @@ th, td {
   cursor: pointer;
 }
 
-.previous:hover, .next:hover {
+.previous:hover,
+.next:hover {
   background-color: #005bb5;
 }
 
@@ -100,7 +103,8 @@ th, td {
     padding: 10px;
   }
 
-  th, td {
+  th,
+  td {
     padding: 10px;
   }
 
@@ -118,7 +122,8 @@ th, td {
     justify-content: center;
   }
 
-  .previous, .next {
+  .previous,
+  .next {
     margin: 5px;
   }
 }

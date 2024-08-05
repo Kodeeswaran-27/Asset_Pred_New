@@ -7,8 +7,10 @@ export const SignOutButton = () => {
     const { instance } = useMsal();
 
     const handleLogout = () => {
+        sessionStorage.removeItem('responseData');
         instance.logoutRedirect({
             postLogoutRedirectUri: "/",
+
         }).catch(e=>{
             console.error(e);
         });

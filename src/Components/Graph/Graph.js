@@ -1,33 +1,37 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 import updatedData from './graphsData.json';
 import previousData from './originalData.json';
-import Footer from '../Footer/footer';
+import { MdArrowOutward } from "react-icons/md";
 import './Graph.css';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import * as am4themes_animated from '@amcharts/amcharts4/themes/animated';
+import { Modal } from 'react-bootstrap';
 
 am4core.useTheme(am4themes_animated.default);
 
 const ChartComponent = () => {
+  const defaultAssets = [...new Set(updatedData.map(item => item.Item))].slice(0, 2);
+  const [selectedAssets, setSelectedAssets] = useState(defaultAssets);
   const [chartData, setChartData] = useState([]);
-  const [selectedAssets, setSelectedAssets] = useState([]);
+  // const [selectedAssets, setSelectedAssets] = useState([]);
   const [selectedYear, setSelectedYear] = useState('');
   const chartRef = useRef(null);
-
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
   const [chartData2, setChartData2] = useState([]);
   const chartRef2 = useRef(null);
-
   const [donutData, setDonutData] = useState([]);
   const donutRef = useRef(null);
+
 
   useEffect(() => {
     updateChartData(selectedAssets, selectedYear);
     updateChartData2(selectedAssets, selectedYear);
     updateDonutChartData(selectedYear);
   }, [selectedAssets, selectedYear]);
+
 
   useEffect(() => {
     const validYears = updatedData.map(item => item.Year).filter(year => year !== undefined);
@@ -132,6 +136,11 @@ const ChartComponent = () => {
 
   const updateDonutChartData = (selectedYear) => {
     let filteredData = updatedData;
+
+    if (selectedAssets.length > 0) {
+      filteredData = filteredData.filter(item => selectedAssets.includes(item.Item));
+    }
+
     if (selectedYear) {
       filteredData = filteredData.filter(item => item.Year.toString() === selectedYear);
     }
@@ -155,7 +164,6 @@ const ChartComponent = () => {
       value: item.count,
     })));
   };
-
   const assetOptions = [...new Set(updatedData.map(item => item.Item))].map(asset => ({
     value: asset,
     label: asset,
@@ -168,7 +176,43 @@ const ChartComponent = () => {
       label: year.toString(),
     }));
 
+  const handleSelectChange = (selectedOptions) => {
+    if (selectedOptions.length <= 10) {
+      setSelectedAssets(selectedOptions.map(option => option.value));
+    }
+  };
+
+  const CustomOption = (props) => {
+    return (
+      <components.Option {...props}>
+        <input
+          type="checkbox"
+          checked={props.isSelected}
+          onChange={() => null}
+        />{" "}
+        <label>{props.label}</label>
+      </components.Option>
+    );
+  };
+
+  const CustomMultiValue = (props) => {
+    return (
+      <components.MultiValue {...props}>
+        <input
+          type="checkbox"
+          checked
+          onChange={() => null}
+          style={{ marginRight: '8px' }}
+        />
+        {props.children}
+      </components.MultiValue>
+    );
+  };
+
+
+
   useLayoutEffect(() => {
+    console.log("creating first chart");
     let chart = am4core.create('chartdiv', am4charts.XYChart);
     chart.paddingRight = 20;
     chart.logo.disabled = true;
@@ -192,8 +236,15 @@ const ChartComponent = () => {
     categoryAxis.title.text = "Months";
     categoryAxis.title.fontWeight = "bold";
 
+
+
+    // let maxValue = Math.max(...chartData.flatMap(data => selectedAssets.map(asset => data[asset])));
+
+
+
+
     let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-    valueAxis.min = 0;
+    // valueAxis.max = maxValue+1;
     valueAxis.title.text = "Predicted no. of units";
     valueAxis.title.fontWeight = "bold";
 
@@ -209,7 +260,18 @@ const ChartComponent = () => {
       series.dataFields.categoryX = 'month';
       series.name = asset;
       series.columns.template.tooltipText = '{categoryX}: [bold]{valueY}[/] ({year})';
-      series.columns.template.fill = colors[index % colors.length];
+      // series.columns.template.fill = colors[index % colors.length];
+
+      // series.columns.template.width = am4core.percent(5); // Adjust width percentage as needed
+
+
+      // Adding value labels on top of each bar
+      let label = series.bullets.push(new am4charts.LabelBullet());
+      label.label.text = '{valueY}';
+      label.label.fill = am4core.color('#000000');
+      label.locationY = -0.01; // Position the label at the top of the bar
+      label.label.fontSize = 16;
+      label.label.fontWeight = 'bold';
 
       series.tooltip.getFillFromObject = true;
       series.tooltip.background.fill = am4core.color("#00000000");
@@ -229,12 +291,14 @@ const ChartComponent = () => {
     chartRef.current = chart;
 
     chart.legend = new am4charts.Legend();
-    chart.legend.labels.template.fontSize = 12;
+    chart.legend.labels.template.fontSize = Math.max(10, 12 - selectedAssets.length); // Adjusting font size based on number of assets
+    console.log("Created first chart");
 
     return () => {
       chart.dispose();
     };
   }, [chartData, selectedAssets, selectedYear]);
+
 
   useLayoutEffect(() => {
     let chart2 = am4core.create('chartdiv2', am4charts.XYChart);
@@ -296,7 +360,7 @@ const ChartComponent = () => {
       bulletPrevious.circle.strokeWidth = 2;
       bulletPrevious.circle.fill = am4core.color("#fff");
       seriesPrevious.tooltip.getFillFromObject = true;
-      seriesPrevious.tooltip.background.fill = am4core.color("#ff0000");
+      seriesPrevious.tooltip.background.fill = am4core.color("#0000ff");
       seriesPrevious.tooltip.label.fill = am4core.color("#ffffff");
 
       // Adding cursor and hover state to display Y-axis value
@@ -347,12 +411,53 @@ const ChartComponent = () => {
     chartRef2.current = chart2;
 
     chart2.legend = new am4charts.Legend();
-    chart2.legend.labels.template.fontSize = 12;
+    chart2.legend.labels.template.fontSize = 7; // Adjusting font size based on number of assets
 
     return () => {
       chart2.dispose();
     };
   }, [chartData2, selectedAssets, selectedYear]);
+
+
+
+  const handleShowModal = (chartId) => {
+    setModalContent(chartId);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  useLayoutEffect(() => {
+    let donutChart = am4core.create('donutChartdiv', am4charts.PieChart);
+    donutChart.innerRadius = am4core.percent(50);
+    donutChart.logo.disabled = true;
+
+    donutChart.data = donutData;
+
+    let title3 = donutChart.titles.create();
+    title3.text = "Selected assets by count";
+    title3.paddingBottom = 12;
+    title3.fontSize = 17;
+    title3.fontWeight = "bold";
+
+
+    let pieSeries = donutChart.series.push(new am4charts.PieSeries());
+    pieSeries.dataFields.value = 'value';
+    pieSeries.dataFields.category = 'category';
+    pieSeries.slices.template.tooltipText = "{category}: [bold]{value}[/]";
+
+    let legend3 = new am4charts.Legend();
+    legend3.position = "bottom";
+    donutChart.legend = legend3;
+
+    donutRef.current = donutChart;
+
+    return () => {
+      donutChart.dispose();
+    };
+  }, [donutData]);
 
   useLayoutEffect(() => {
     let donutChart = am4core.create('donutChartDiv', am4charts.PieChart);
@@ -361,7 +466,7 @@ const ChartComponent = () => {
     donutChart.data = donutData;
 
     let title3 = donutChart.titles.create();
-    title3.text = "Top 10 Assets by Count";
+    title3.text = "Assets by Count";
     title3.paddingBottom = 12;
     title3.fontSize = 17;
     title3.fontWeight = "bold";
@@ -391,26 +496,221 @@ const ChartComponent = () => {
     };
   }, [donutData]);
 
+
+
+
+  useEffect(() => {
+    if (showModal && modalContent) {
+      let chart;
+      if (modalContent === 'chartdiv') {
+        chart = am4core.create(`${modalContent}-chart`, am4charts.XYChart);
+        chart.paddingRight = 20;
+        chart.logo.disabled = true;
+
+        chart.data = chartData;
+
+        let title = chart.titles.create();
+        title.text = "Assets Predicted";
+        title.paddingBottom = 12;
+        title.fontSize = 17;
+        title.fontWeight = "bold";
+
+        let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+        categoryAxis.dataFields.category = 'month';
+        categoryAxis.renderer.grid.template.location = 0;
+        categoryAxis.renderer.minGridDistance = 0;
+        categoryAxis.renderer.labels.template.rotation = 1;
+        categoryAxis.renderer.labels.template.verticalCenter = 'middle';
+        // categoryAxis.renderer.labels.template.horizontalCenter = 'middle';
+        categoryAxis.start = 0;
+        categoryAxis.renderer.grid.template.disabled = true;
+        categoryAxis.title.text = "Months";
+        categoryAxis.title.fontWeight = "bold";
+
+
+        // let maxValue = Math.max(...chartData.flatMap(data => selectedAssets.map(asset => data[asset])));
+
+        let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        // valueAxis.max = maxValue+1;
+        valueAxis.title.text = "Predicted no. of units";
+        valueAxis.title.fontWeight = "bold";
+
+        selectedAssets.forEach(asset => {
+          let series = chart.series.push(new am4charts.ColumnSeries());
+          series.dataFields.valueY = asset;
+          series.dataFields.categoryX = 'month';
+          series.name = asset;
+
+          series.columns.template.tooltipText = `${asset}: [bold]{valueY}[/]`;
+          series.columns.template.width = am4core.percent(150);
+
+          let label = series.bullets.push(new am4charts.LabelBullet());
+          label.label.text = '{valueY}';
+          label.label.fill = am4core.color('#000000');
+          label.locationY = -0.01; // Position the label at the top of the bar
+          label.label.fontSize = 14;
+          label.label.fontWeight = 'bold';
+
+          series.tooltip.getFillFromObject = true;
+          series.tooltip.background.fill = am4core.color("#00000000");
+          series.tooltip.label.fill = am4core.color("#000000");
+
+          series.columns.template.adapter.add("tooltipText", function (text, target) {
+            if (target.dataItem) {
+              const month = target.dataItem.categoryX;
+              const value = target.dataItem.valueY;
+              const year = selectedYear;
+              return `${month}: [bold]${value}[/] (${year})`;
+            }
+            return text;
+          });
+
+
+        });
+
+
+
+
+
+
+        let legend = new am4charts.Legend();
+        legend.position = "bottom";
+        chart.legend = legend;
+      }
+      else if (modalContent === 'chartdiv2') {
+        // console.log("donutChartdiv donutChartdiv donutChartdiv");
+
+        chart = am4core.create(`${modalContent}-chart`, am4charts.XYChart);
+        chart.paddingRight = 20;
+        chart.logo.disabled = true;
+
+        chart.data = chartData2;
+
+        let title = chart.titles.create();
+        title.text = "Assets Updated vs Previous Data";
+        title.paddingBottom = 12;
+        title.fontSize = 17;
+        title.fontWeight = "bold";
+
+        let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+        categoryAxis.dataFields.category = 'month';
+        categoryAxis.renderer.grid.template.location = 0;
+        categoryAxis.renderer.minGridDistance = 0;
+        categoryAxis.renderer.labels.template.rotation = 1;
+        categoryAxis.renderer.labels.template.verticalCenter = 'middle';
+        categoryAxis.start = 0;
+        categoryAxis.renderer.grid.template.disabled = true;
+        categoryAxis.title.text = "Months";
+        categoryAxis.title.fontWeight = "bold";
+
+        let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        valueAxis.min = 0;
+        valueAxis.title.text = "Number of units";
+        valueAxis.title.fontWeight = "bold";
+
+        selectedAssets.forEach(asset => {
+          let updatedSeries = chart.series.push(new am4charts.LineSeries());
+          updatedSeries.dataFields.valueY = `${asset}_updated2`;
+          updatedSeries.dataFields.categoryX = 'month';
+          // updatedSeries.name = `${asset}_updated2`;
+          // updatedSeries.strokeWidth = 2;
+          updatedSeries.tooltipText = `${asset} updated: [bold]{valueY}[/]`;
+          // updatedSeries.stroke = am4core.color("#67b7dc");
+          // updatedSeries.fill = updatedSeries.stroke;
+          // updatedSeries.fillOpacity = 0;
+          updatedSeries.tensionX = 0.8;
+
+          chart.cursor = new am4charts.XYCursor();
+          updatedSeries.events.on("over", event => {
+            let dataItem = event.target.tooltipDataItem;
+            let value = dataItem.values.valueY.value;
+            let label = event.target.tooltipContainer.createChild(am4core.Label);
+            label.text = value.toString();
+            label.fill = am4core.color("#ffffff");
+            label.background.fill = am4core.color("#0000ff");
+            label.background.fillOpacity = 0.8;
+            label.padding(4, 8, 4, 8);
+            label.y = -30;
+            dataItem.label = label;
+          });
+
+          let bulletUpdated = updatedSeries.bullets.push(new am4charts.CircleBullet());
+          bulletUpdated.circle.radius = 4;
+          bulletUpdated.circle.strokeWidth = 2;
+          bulletUpdated.circle.fill = am4core.color("#fff");
+          updatedSeries.tooltip.getFillFromObject = true;
+          updatedSeries.tooltip.background.fill = am4core.color("#0000ff");
+          updatedSeries.tooltip.label.fill = am4core.color("#ffffff");
+
+          let previousSeries = chart.series.push(new am4charts.LineSeries());
+          previousSeries.dataFields.valueY = `${asset}_previous2`;
+          previousSeries.dataFields.categoryX = 'month';
+          // previousSeries.name = `${asset}_previous2`;
+          previousSeries.strokeWidth = 2;
+          previousSeries.strokeDasharray = "3,4";
+          previousSeries.tooltipText = '{valueY.value}';
+          previousSeries.tensionX = 0.8;
+          previousSeries.tooltipText = `${asset} previous: [bold]{valueY}[/]`;
+          previousSeries.fill = previousSeries.stroke;
+
+          let bulletPrevious = previousSeries.bullets.push(new am4charts.CircleBullet());
+          bulletPrevious.circle.radius = 4;
+          bulletPrevious.circle.strokeWidth = 2;
+          bulletPrevious.circle.fill = am4core.color("#fff");
+          previousSeries.tooltip.getFillFromObject = true;
+          previousSeries.tooltip.background.fill = am4core.color("#0000ff");
+          previousSeries.tooltip.label.fill = am4core.color("#ffffff");
+        });
+
+        let legend = new am4charts.Legend();
+        legend.position = "bottom";
+        chart.legend = legend;
+      } else if (modalContent === 'donutChartDiv') {
+        console.log("Logging: " + modalContent)
+        console.log("donutChartdiv donutChartdiv donutChartdiv");
+        chart = am4core.create(`${modalContent}-chart`, am4charts.PieChart);
+        console.log("charttttt:    " + chart);
+        chart.logo.disabled = true;
+        console.log("creating donut charts")
+        chart.data = donutData;
+        console.log("Chart data: " + chart.data);
+        let title = chart.titles.create();
+        title.text = "Top 10 assets by count";
+        title.paddingBottom = 12;
+        title.fontSize = 17;
+        title.fontWeight = "bold";
+
+        let pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = 'value';
+        pieSeries.dataFields.category = 'category';
+        pieSeries.slices.template.tooltipText = "{category}: [bold]{value}[/]";
+        let legend = new am4charts.Legend();
+        legend.position = "right";
+        chart.legend = legend;
+      }
+      else {
+        console.log("ESrdtfyugihojpk[oiuyftdresawrstdyfugihojpk[")
+      }
+      return () => {
+        chart.dispose();
+      };
+    }
+  }, [showModal, modalContent, chartData, chartData2, donutData, donutData, selectedAssets]);
   return (
     <div>
       <div className="container">
         <div className="selectors">
-          <div className="back">
-            <Link to="/main/predictedData" className="goto-back-btn">
-              Back
-            </Link>
+          <div className="filter-item">
+            <Select
+              id="assets-select"
+              isMulti
+              options={assetOptions}
+              value={selectedAssets.map(asset => ({ value: asset, label: asset }))}
+              onChange={handleSelectChange}
+              components={{ Option: CustomOption, MultiValue: CustomMultiValue }}
+              closeMenuOnSelect={false}
+            />
           </div>
-          <Select
-            id="assets-select"
-            isMulti
-            options={assetOptions}
-            value={selectedAssets.map(asset => ({ value: asset, label: asset }))}
-            onChange={selectedOptions => {
-              if (selectedOptions.length <= 3) {
-                setSelectedAssets(selectedOptions.map(option => option.value));
-              }
-            }}
-          />
           <Select
             id="year-select"
             options={yearOptions}
@@ -418,18 +718,41 @@ const ChartComponent = () => {
             onChange={selectedOption => setSelectedYear(selectedOption.value)}
           />
         </div>
-        <div id="chartdiv" style={{ width: '100%', height: '500px' }}></div>
+        <div className="mainchart">
+          <div id="chartdiv" style={{ width: '270%', height: '500px' }}></div>
+          <button className="info-button" onClick={() => handleShowModal('chartdiv')}>
+            <MdArrowOutward className='arrow-icon' />
+          </button>
+        </div>
       </div>
       <div className="container">
-        <div id="chartdiv2" style={{ width: '100%', height: '500px' }}></div>
+        <div className="mainchart1">
+          <div id="chartdiv2" style={{ width: '100%', height: '500px' }}></div>
+          <button className="info-button" onClick={() => handleShowModal('chartdiv2')}>
+            <MdArrowOutward className='arrow-icon' />
+          </button>
+        </div>
       </div>
       <div className="container">
-        <div id="donutChartDiv" style={{ width: '100%', height: '500px' }}></div>
+        <div className="mainchart2">
+          <div id="donutChartDiv" style={{ width: '102%', height: '500px' }}></div>
+          <button className="info-button" onClick={() => handleShowModal('donutChartDiv')}>
+            <MdArrowOutward className='arrow-icon' />
+          </button>
+        </div>
       </div>
-      {/* <div className='footer'>
-            © 2024 Wipro | Privacy Policy
-          </div> */}
-      <div className="bv"><Footer></Footer></div>
+      <Modal show={showModal} onHide={handleCloseModal} size="xl">
+        <Modal.Header closeButton>
+          <Modal.Title>Chart Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {modalContent === 'chartdiv' && <div id="chartdiv-chart" style={{ width: '100%', height: '500px' }}></div>}
+          {modalContent === 'chartdiv2' && <div id="chartdiv2-chart" style={{ width: '100%', height: '500px' }}></div>}
+          {modalContent === 'donutChartDiv' && <div id="donutChartDiv-chart" style={{ width: '103%', height: '500px' }}></div>}
+        </Modal.Body>
+        <Modal.Footer>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

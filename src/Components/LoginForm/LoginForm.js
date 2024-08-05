@@ -38,21 +38,18 @@ function LoginForm() {
                     <img src={logo} alt="Wipro Technologies Ltd" />
                 </div>
                 <div className="login">
-                    <div className="card">
+                    <div className="login-box">
                         <AuthenticatedTemplate>
                             <Fileupload />
                         </AuthenticatedTemplate>
                         <UnauthenticatedTemplate>
-                        <h3 className="labels">Asset Management</h3>
-                        <h4 className="labels">Login to unclock insights into AI Asset requirement forcastig</h4>
+                        <h3 className="labels">Asset Prediction</h3>
+                        <h5 className="labels">Login to unlock insights into AI Asset requirement forecastig</h5>
                         <img src={icon} alt="Asset Management icon" />
                         <SignInButton />
                         </UnauthenticatedTemplate>
                     </div>
                 </div>
-                {/* <div className='footer'>
-                    <p>©2024 - Wipro | Privacy Policy</p>
-                </div> */}
                 <div className="bv2"><Footer></Footer></div>
             </div>
         </div>

@@ -2,27 +2,13 @@ container {
   margin-bottom: 20px !important;
 }
 
-.back {
-  width: 10%;
-  background: whitesmoke;
-  border-radius: 10px;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  position: relative;
-  left: -15pc;
-  bottom: 175%;
-  height: 40px;
-}
 .selectors {
   display: flex;
-  /* justify-content: space-between; */
-  /* width: 300px; */
   justify-content: center;
   margin-bottom: 10px;
   margin-right: auto;
   margin-top: 10px;
-  margin-left: -11pc;
+  align-items: center;
 }
 
 .selectors .css-yk16xz-control,
@@ -30,15 +16,42 @@ container {
   width: 100%;
 }
 
+.mainchart,.mainchart1,.mainchart2{
+  display: flex;
+  width: 1200px;
+  background: white;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  border-top-right-radius: 15px;
+}
+
 #chartdiv,
 #chartdiv2 {
-  width: 1000px !important;
+  width: 1200px !important;
   height: 500px;
   background-color: white;
   border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); */
   border: 10px solid white;
   margin-top: 10px;
+}
+
+.info-button{
+  background: transparent;
+  border: none;
+  height: 30px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+.arrow-icon{
+  width: 30px;
+  height: 30px;
+}
+
+.filter-item {
+  min-width: 40vw;
+  margin: 0% 2%;
+  max-width: 40vw;
 }
 
 .footer {
@@ -52,16 +65,14 @@ container {
 #donutChartDiv {
   background-color: white;
   border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); */
   border: 1px solid white;
   margin-top: 10px;
   padding-left: 6px;
   padding-top: 5px;
 }
 
-.bv {
-  margin-top: 1%;
-  position: relative;
-  display: flex !important;
-  justify-content: center;
+.css-b62m3t-container {
+  background-color: transparent;
+
 }
